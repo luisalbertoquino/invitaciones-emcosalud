@@ -12,15 +12,15 @@
       background: #0a0f1e;
       color: #c8d8f0;
       min-height: 100vh;
-      padding: 40px 20px;
+      padding: 40px 20px 80px;
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #7ab4ff;
       letter-spacing: 1px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       text-align: center;
     }
 
@@ -28,85 +28,138 @@
       background: #111827;
       border: 1px solid #1e3050;
       border-radius: 14px;
-      padding: 28px;
-      max-width: 560px;
-      margin: 0 auto 32px;
+      padding: 24px;
+      max-width: 620px;
+      margin: 0 auto 24px;
     }
-
     .card h2 {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       color: #4a7fbf;
       margin-bottom: 18px;
     }
 
-    /* ── Login ─────────────────────────────────────────── */
+    /* ── Login ─────────────────────────────── */
     #loginSection { max-width: 360px; margin: 80px auto; }
     #loginSection input {
-      width: 100%;
-      padding: 12px 16px;
-      background: #0d1526;
-      border: 1px solid #1e3050;
-      border-radius: 8px;
-      color: #c8d8f0;
-      font-size: 1rem;
-      margin-bottom: 12px;
-      outline: none;
+      width: 100%; padding: 12px 16px;
+      background: #0d1526; border: 1px solid #1e3050;
+      border-radius: 8px; color: #c8d8f0;
+      font-size: 1rem; margin-bottom: 12px; outline: none;
     }
     #loginSection input:focus { border-color: #3a6bb5; }
-    #loginError {
-      color: #ff6b6b;
-      font-size: 0.82rem;
-      margin-bottom: 10px;
-      display: none;
+    #loginError { color: #ff6b6b; font-size: 0.82rem; margin-bottom: 10px; display: none; }
+
+    /* ── Sección de campo ──────────────────── */
+    .field-section {
+      border: 1px solid #1a2e4a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .field-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .field-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #a0c4f0;
+    }
+    .field-hint {
+      font-size: 0.72rem;
+      color: #3a5a7a;
+      font-style: italic;
     }
 
-    /* ── Drop zone ─────────────────────────────────────── */
+    /* Medidas recomendadas */
+    .medidas {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #0d1a2e;
+      border: 1px solid #1a3050;
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      color: #4a7fbf;
+      margin-bottom: 10px;
+    }
+    .medidas span { color: #7ab4ff; font-weight: 600; }
+
+    /* Toggle imagen / color */
+    .toggle-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .toggle-btn {
+      flex: 1; padding: 7px;
+      background: #0d1526;
+      border: 1px solid #1e3050;
+      border-radius: 6px;
+      color: #4a6a8a;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: auto;
+    }
+    .toggle-btn.active {
+      background: #1a3a6a;
+      border-color: #3a6bb5;
+      color: #7ab4ff;
+    }
+
+    /* Drop zone compacto */
     .drop-zone {
       border: 2px dashed #1e3a6a;
-      border-radius: 12px;
-      padding: 40px 20px;
+      border-radius: 8px;
+      padding: 20px;
       text-align: center;
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
-      position: relative;
     }
-    .drop-zone:hover,
-    .drop-zone.drag-over {
+    .drop-zone:hover, .drop-zone.drag-over {
       border-color: #4a8fd4;
-      background: rgba(74, 143, 212, 0.05);
+      background: rgba(74,143,212,0.05);
     }
-    .drop-zone p { font-size: 0.9rem; color: #5580aa; margin-bottom: 12px; }
-    .drop-zone span { font-size: 0.75rem; color: #344a6a; }
+    .drop-zone p { font-size: 0.82rem; color: #4a6a8a; margin-bottom: 6px; }
+    .drop-zone .fname { font-size: 0.75rem; color: #7ab4ff; margin-top: 4px; }
 
-    /* ── Preview ───────────────────────────────────────── */
-    #previewWrap {
-      display: none;
-      margin-top: 18px;
-      text-align: center;
-    }
-    #previewImg {
-      max-width: 100%;
-      max-height: 260px;
-      border-radius: 8px;
-      border: 1px solid #1e3050;
+    /* Preview imagen */
+    .preview-img {
+      width: 100%; max-height: 140px;
       object-fit: contain;
-    }
-    #fileInfo {
-      font-size: 0.75rem;
-      color: #4a6a8a;
-      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #1e3050;
+      margin-top: 10px;
+      display: none;
     }
 
-    /* ── Buttons ───────────────────────────────────────── */
+    /* Color picker */
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      display: none;
+    }
+    .color-row input[type="color"] {
+      width: 48px; height: 40px;
+      border: none; border-radius: 6px;
+      cursor: pointer; padding: 2px;
+      background: none;
+    }
+    .color-row span { font-size: 0.82rem; color: #5580aa; }
+
+    /* ── Botones ───────────────────────────── */
     button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      width: 100%; padding: 12px;
+      border: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 600;
       cursor: pointer;
       transition: opacity 0.2s, transform 0.1s;
     }
@@ -115,120 +168,79 @@
 
     .btn-primary {
       background: linear-gradient(135deg, #1a4a9a, #2a6bd4);
-      color: #fff;
-      margin-top: 16px;
+      color: #fff; margin-top: 8px;
     }
     .btn-primary:hover:not(:disabled) { opacity: 0.88; }
-
     .btn-secondary {
-      background: #111827;
-      color: #5580aa;
+      background: #111827; color: #5580aa;
       border: 1px solid #1e3050;
-      font-size: 0.85rem;
-      padding: 10px;
+      font-size: 0.85rem; padding: 10px;
     }
     .btn-danger {
-      background: #2a0f0f;
-      color: #ff6b6b;
+      background: #2a0f0f; color: #ff6b6b;
       border: 1px solid #5a1a1a;
-      font-size: 0.82rem;
-      padding: 8px;
-      width: auto;
-      border-radius: 6px;
-    }
-
-    /* ── Result ────────────────────────────────────────── */
-    #resultBox {
-      display: none;
-      margin-top: 18px;
-      background: #0d1a2e;
-      border: 1px solid #1e3a6a;
-      border-radius: 10px;
-      padding: 18px;
-    }
-    #resultBox p { font-size: 0.8rem; color: #4a7fbf; margin-bottom: 8px; }
-    .link-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    #linkOutput {
-      flex: 1;
-      padding: 10px 12px;
-      background: #060d1a;
-      border: 1px solid #1e3050;
-      border-radius: 6px;
-      color: #7ab4ff;
-      font-size: 0.82rem;
-      outline: none;
+      font-size: 0.8rem; padding: 8px;
+      width: auto; border-radius: 6px;
     }
     .btn-copy {
-      padding: 10px 14px;
-      background: #1a3a6a;
-      color: #7ab4ff;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      width: auto;
-      white-space: nowrap;
+      padding: 9px 13px;
+      background: #1a3a6a; color: #7ab4ff;
+      border: none; border-radius: 6px;
+      font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; width: auto; white-space: nowrap;
     }
     .btn-copy:hover { background: #1e4a8a; }
 
-    /* ── Cards list ────────────────────────────────────── */
-    .cards-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    /* ── Resultado ─────────────────────────── */
+    #resultBox {
+      display: none; margin-top: 16px;
+      background: #0d1a2e; border: 1px solid #1e3a6a;
+      border-radius: 10px; padding: 16px;
     }
-    .card-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #0d1526;
-      border: 1px solid #1a2e4a;
-      border-radius: 10px;
-      padding: 12px 14px;
+    #resultBox p { font-size: 0.8rem; color: #4a7fbf; margin-bottom: 8px; }
+    .link-row { display: flex; gap: 8px; align-items: center; }
+    #linkOutput {
+      flex: 1; padding: 10px 12px;
+      background: #060d1a; border: 1px solid #1e3050;
+      border-radius: 6px; color: #7ab4ff;
+      font-size: 0.8rem; outline: none;
     }
-    .card-item img {
-      width: 56px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 5px;
-      flex-shrink: 0;
-    }
-    .card-item-info { flex: 1; min-width: 0; }
-    .card-item-info .card-id {
-      font-size: 0.78rem;
-      color: #7ab4ff;
-      font-family: monospace;
-    }
-    .card-item-info .card-meta {
-      font-size: 0.72rem;
-      color: #3a5a7a;
-      margin-top: 2px;
-    }
-    .card-actions { display: flex; gap: 6px; align-items: center; }
 
-    #loadingCards { font-size: 0.82rem; color: #3a5a7a; }
-    #noCards { font-size: 0.82rem; color: #3a5a7a; display: none; }
-
-    /* ── Upload progress ───────────────────────────────── */
+    /* ── Status ────────────────────────────── */
     #uploadStatus {
-      margin-top: 10px;
-      font-size: 0.8rem;
-      text-align: center;
-      min-height: 18px;
-      color: #4a7fbf;
+      margin-top: 10px; font-size: 0.8rem;
+      text-align: center; min-height: 18px; color: #4a7fbf;
     }
     #uploadStatus.error { color: #ff6b6b; }
     #uploadStatus.ok { color: #00d97e; }
+
+    /* ── Lista de tarjetas ─────────────────── */
+    .cards-grid { display: flex; flex-direction: column; gap: 10px; }
+    .card-item {
+      display: flex; align-items: center; gap: 12px;
+      background: #0d1526; border: 1px solid #1a2e4a;
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .card-item img {
+      width: 56px; height: 40px;
+      object-fit: cover; border-radius: 5px; flex-shrink: 0;
+    }
+    .card-item-info { flex: 1; min-width: 0; }
+    .card-id { font-size: 0.78rem; color: #7ab4ff; font-family: monospace; }
+    .card-meta { font-size: 0.72rem; color: #3a5a7a; margin-top: 2px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .tag {
+      font-size: 0.65rem; padding: 2px 6px;
+      border-radius: 4px; background: #1a2e4a; color: #4a7fbf;
+    }
+    .card-actions { display: flex; gap: 6px; align-items: center; }
+    #loadingCards, #noCards { font-size: 0.82rem; color: #3a5a7a; }
+    #noCards { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- ── LOGIN ───────────────────────────────────────────── -->
+  <!-- LOGIN -->
   <div id="loginSection" class="card">
     <h1>Admin — EMCOSALUD</h1>
     <p id="loginError">Contraseña incorrecta</p>
@@ -236,27 +248,127 @@
     <button class="btn-primary" onclick="doLogin()">Entrar</button>
   </div>
 
-  <!-- ── PANEL PRINCIPAL ─────────────────────────────────── -->
+  <!-- PANEL -->
   <div id="mainPanel" style="display:none">
     <h1>Tarjetas EMCOSALUD</h1>
 
-    <!-- Subir nueva tarjeta -->
+    <!-- Crear nueva tarjeta -->
     <div class="card">
-      <h2>Subir nueva tarjeta</h2>
+      <h2>Nueva tarjeta</h2>
 
-      <div class="drop-zone" id="dropZone"
-           ondragover="onDragOver(event)"
-           ondragleave="onDragLeave(event)"
-           ondrop="onDrop(event)"
-           onclick="document.getElementById('fileInput').click()">
-        <p>Arrastra la imagen aquí</p>
-        <span>PNG, JPG, WEBP — máx. 30 MB</span>
-        <input type="file" id="fileInput" accept="image/*" hidden onchange="onFileChange(event)">
+      <!-- Carta interior (obligatoria) -->
+      <div class="field-section">
+        <div class="field-header">
+          <span class="field-title">Tarjeta interior</span>
+          <span class="field-hint">obligatoria</span>
+        </div>
+        <div class="medidas">Medida recomendada: <span>1200 × 800 px</span> — horizontal</div>
+        <div class="drop-zone" id="dz-carta"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,'carta')"
+             onclick="document.getElementById('fi-carta').click()">
+          <p>Arrastra la imagen o haz clic</p>
+          <div class="fname" id="fn-carta">PNG, JPG, WEBP — máx. 30 MB</div>
+          <input type="file" id="fi-carta" accept="image/*" hidden onchange="fileChange(event,'carta')">
+        </div>
+        <img class="preview-img" id="pv-carta">
       </div>
 
-      <div id="previewWrap">
-        <img id="previewImg" src="" alt="Preview">
-        <p id="fileInfo"></p>
+      <!-- Sello -->
+      <div class="field-section">
+        <div class="field-header">
+          <span class="field-title">Sello / Logo</span>
+          <span class="field-hint">opcional — si no subes uno se usa el logo EMCOSALUD</span>
+        </div>
+        <div class="medidas">Medida recomendada: <span>500 × 500 px</span> — cuadrado</div>
+        <div class="drop-zone" id="dz-sello"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,'sello')"
+             onclick="document.getElementById('fi-sello').click()">
+          <p>Arrastra la imagen o haz clic</p>
+          <div class="fname" id="fn-sello">PNG, JPG, WEBP — máx. 30 MB</div>
+          <input type="file" id="fi-sello" accept="image/*" hidden onchange="fileChange(event,'sello')">
+        </div>
+        <img class="preview-img" id="pv-sello">
+      </div>
+
+      <!-- Fondo del sobre -->
+      <div class="field-section">
+        <div class="field-header">
+          <span class="field-title">Fondo del sobre</span>
+          <span class="field-hint">opcional</span>
+        </div>
+        <div class="medidas">Medida recomendada: <span>1200 × 900 px</span> — cubre todo el sobre</div>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="tb-fondo-img"  onclick="setMode('fondo','img')">Imagen</button>
+          <button class="toggle-btn"        id="tb-fondo-color" onclick="setMode('fondo','color')">Color</button>
+        </div>
+        <div id="mode-fondo-img">
+          <div class="drop-zone" id="dz-fondo"
+               ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,'fondo')"
+               onclick="document.getElementById('fi-fondo').click()">
+            <p>Arrastra la imagen o haz clic</p>
+            <div class="fname" id="fn-fondo">PNG, JPG, WEBP — máx. 30 MB</div>
+            <input type="file" id="fi-fondo" accept="image/*" hidden onchange="fileChange(event,'fondo')">
+          </div>
+          <img class="preview-img" id="pv-fondo">
+        </div>
+        <div class="color-row" id="mode-fondo-color">
+          <input type="color" id="color-fondo" value="#102848">
+          <span>Elige el color del fondo</span>
+        </div>
+      </div>
+
+      <!-- Solapa izquierda -->
+      <div class="field-section">
+        <div class="field-header">
+          <span class="field-title">Solapa izquierda</span>
+          <span class="field-hint">opcional</span>
+        </div>
+        <div class="medidas">Medida recomendada: <span>600 × 900 px</span> — vertical</div>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="tb-solapa1-img"   onclick="setMode('solapa1','img')">Imagen</button>
+          <button class="toggle-btn"        id="tb-solapa1-color" onclick="setMode('solapa1','color')">Color</button>
+        </div>
+        <div id="mode-solapa1-img">
+          <div class="drop-zone" id="dz-solapa1"
+               ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,'solapa1')"
+               onclick="document.getElementById('fi-solapa1').click()">
+            <p>Arrastra la imagen o haz clic</p>
+            <div class="fname" id="fn-solapa1">PNG, JPG, WEBP — máx. 30 MB</div>
+            <input type="file" id="fi-solapa1" accept="image/*" hidden onchange="fileChange(event,'solapa1')">
+          </div>
+          <img class="preview-img" id="pv-solapa1">
+        </div>
+        <div class="color-row" id="mode-solapa1-color">
+          <input type="color" id="color-solapa1" value="#1a3868">
+          <span>Elige el color de la solapa</span>
+        </div>
+      </div>
+
+      <!-- Solapa derecha -->
+      <div class="field-section">
+        <div class="field-header">
+          <span class="field-title">Solapa derecha</span>
+          <span class="field-hint">opcional</span>
+        </div>
+        <div class="medidas">Medida recomendada: <span>600 × 900 px</span> — vertical</div>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="tb-solapa2-img"   onclick="setMode('solapa2','img')">Imagen</button>
+          <button class="toggle-btn"        id="tb-solapa2-color" onclick="setMode('solapa2','color')">Color</button>
+        </div>
+        <div id="mode-solapa2-img">
+          <div class="drop-zone" id="dz-solapa2"
+               ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,'solapa2')"
+               onclick="document.getElementById('fi-solapa2').click()">
+            <p>Arrastra la imagen o haz clic</p>
+            <div class="fname" id="fn-solapa2">PNG, JPG, WEBP — máx. 30 MB</div>
+            <input type="file" id="fi-solapa2" accept="image/*" hidden onchange="fileChange(event,'solapa2')">
+          </div>
+          <img class="preview-img" id="pv-solapa2">
+        </div>
+        <div class="color-row" id="mode-solapa2-color">
+          <input type="color" id="color-solapa2" value="#1a3868">
+          <span>Elige el color de la solapa</span>
+        </div>
       </div>
 
       <p id="uploadStatus"></p>
@@ -271,27 +383,27 @@
       </div>
     </div>
 
-    <!-- Tarjetas existentes -->
+    <!-- Lista -->
     <div class="card">
       <h2>Tarjetas creadas</h2>
       <div class="cards-grid" id="cardsList">
         <p id="loadingCards">Cargando...</p>
         <p id="noCards">No hay tarjetas aún.</p>
       </div>
-      <button class="btn-secondary" style="margin-top:16px" onclick="loadCards()">Actualizar lista</button>
+      <button class="btn-secondary" style="margin-top:16px" onclick="loadCards()">Actualizar</button>
     </div>
   </div>
 
   <script>
     let adminPass = '';
-    let selectedFile = null;
+    const files   = {};   // { carta: File, sello: File, fondo: File, solapa1: File, solapa2: File }
+    const modes   = { fondo: 'img', solapa1: 'img', solapa2: 'img' };
 
-    // ── Login ──────────────────────────────────────────────
+    // ── Login ──────────────────────────────────────────────────────────────
     function doLogin() {
       const val = document.getElementById('passInput').value.trim();
       if (!val) return;
       adminPass = val;
-      // Verificar con una llamada real
       fetch('/api/cards', { headers: { 'x-admin-pass': adminPass } })
         .then(r => {
           if (r.ok) {
@@ -303,59 +415,62 @@
             adminPass = '';
           }
         })
-        .catch(() => {
-          document.getElementById('loginError').style.display = 'block';
-        });
+        .catch(() => { document.getElementById('loginError').style.display = 'block'; });
     }
-    document.getElementById('passInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') doLogin();
-    });
+    document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
-    // ── Drag & Drop ────────────────────────────────────────
-    function onDragOver(e) {
-      e.preventDefault();
-      document.getElementById('dropZone').classList.add('drag-over');
-    }
-    function onDragLeave(e) {
-      document.getElementById('dropZone').classList.remove('drag-over');
-    }
-    function onDrop(e) {
-      e.preventDefault();
-      document.getElementById('dropZone').classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) setFile(file);
-    }
-    function onFileChange(e) {
-      const file = e.target.files[0];
-      if (file) setFile(file);
+    // ── Toggle imagen / color ──────────────────────────────────────────────
+    function setMode(field, mode) {
+      modes[field] = mode;
+      document.getElementById(`tb-${field}-img`).classList.toggle('active', mode === 'img');
+      document.getElementById(`tb-${field}-color`).classList.toggle('active', mode === 'color');
+      document.getElementById(`mode-${field}-img`).style.display   = mode === 'img'   ? 'block' : 'none';
+      document.getElementById(`mode-${field}-color`).style.display = mode === 'color' ? 'flex'  : 'none';
     }
 
-    function setFile(file) {
-      selectedFile = file;
+    // ── Drag & Drop ────────────────────────────────────────────────────────
+    function dzOver(e, el)  { e.preventDefault(); el.classList.add('drag-over'); }
+    function dzLeave(el)    { el.classList.remove('drag-over'); }
+    function dzDrop(e, key) {
+      e.preventDefault();
+      document.getElementById(`dz-${key}`).classList.remove('drag-over');
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) setFile(key, f);
+    }
+    function fileChange(e, key) { if (e.target.files[0]) setFile(key, e.target.files[0]); }
+
+    function setFile(key, file) {
+      files[key] = file;
+      document.getElementById(`fn-${key}`).textContent = `${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
       const reader = new FileReader();
       reader.onload = ev => {
-        document.getElementById('previewImg').src = ev.target.result;
-        document.getElementById('previewWrap').style.display = 'block';
-        document.getElementById('fileInfo').textContent =
-          `${file.name} — ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        const img = document.getElementById(`pv-${key}`);
+        img.src = ev.target.result;
+        img.style.display = 'block';
       };
       reader.readAsDataURL(file);
-      document.getElementById('uploadBtn').disabled = false;
-      document.getElementById('uploadStatus').textContent = '';
-      document.getElementById('resultBox').style.display = 'none';
+      if (key === 'carta') document.getElementById('uploadBtn').disabled = false;
     }
 
-    // ── Upload ─────────────────────────────────────────────
+    // ── Upload ─────────────────────────────────────────────────────────────
     async function uploadCard() {
-      if (!selectedFile) return;
-      const btn = document.getElementById('uploadBtn');
+      if (!files.carta) return;
+      const btn    = document.getElementById('uploadBtn');
       const status = document.getElementById('uploadStatus');
       btn.disabled = true;
       status.className = '';
-      status.textContent = 'Subiendo y optimizando...';
+      status.textContent = 'Subiendo y optimizando imágenes...';
 
       const form = new FormData();
-      form.append('card', selectedFile);
+      form.append('carta', files.carta);
+      if (files.sello)   form.append('sello',   files.sello);
+      if (files.fondo && modes.fondo === 'img')     form.append('fondo',   files.fondo);
+      if (files.solapa1 && modes.solapa1 === 'img') form.append('solapa1', files.solapa1);
+      if (files.solapa2 && modes.solapa2 === 'img') form.append('solapa2', files.solapa2);
+
+      if (modes.fondo   === 'color') form.append('fondo_color',   document.getElementById('color-fondo').value);
+      if (modes.solapa1 === 'color') form.append('solapa1_color', document.getElementById('color-solapa1').value);
+      if (modes.solapa2 === 'color') form.append('solapa2_color', document.getElementById('color-solapa2').value);
 
       try {
         const res  = await fetch('/api/upload', {
@@ -385,47 +500,49 @@
       const input = document.getElementById('linkOutput');
       input.select();
       navigator.clipboard.writeText(input.value).then(() => {
-        const btn = document.querySelector('.btn-copy');
+        const btn = document.querySelector('#resultBox .btn-copy');
         btn.textContent = '¡Copiado!';
         setTimeout(() => btn.textContent = 'Copiar', 2000);
       });
     }
 
-    // ── Lista de tarjetas ──────────────────────────────────
+    // ── Lista ──────────────────────────────────────────────────────────────
     async function loadCards() {
       const list = document.getElementById('cardsList');
       document.getElementById('loadingCards').style.display = 'block';
       document.getElementById('noCards').style.display = 'none';
-      // Limpiar items anteriores
       Array.from(list.querySelectorAll('.card-item')).forEach(el => el.remove());
 
       try {
-        const res   = await fetch('/api/cards', { headers: { 'x-admin-pass': adminPass } });
-        const cards = await res.json();
+        const cards = await (await fetch('/api/cards', { headers: { 'x-admin-pass': adminPass } })).json();
         document.getElementById('loadingCards').style.display = 'none';
 
-        if (!cards.length) {
-          document.getElementById('noCards').style.display = 'block';
-          return;
-        }
+        if (!cards.length) { document.getElementById('noCards').style.display = 'block'; return; }
 
         cards.forEach(c => {
+          const tags = [];
+          if (c.sello)   tags.push('sello');
+          if (c.fondo)   tags.push(`fondo ${c.fondo.type}`);
+          if (c.solapa1) tags.push(`solapa-izq ${c.solapa1.type}`);
+          if (c.solapa2) tags.push(`solapa-der ${c.solapa2.type}`);
+
           const item = document.createElement('div');
           item.className = 'card-item';
           item.innerHTML = `
-            <img src="/images/cards/${c.filename}" alt="">
+            <img src="${c.carta}" alt="">
             <div class="card-item-info">
               <div class="card-id">${c.id}</div>
-              <div class="card-meta">${c.sizeKB} KB · ${new Date(c.createdAt).toLocaleDateString('es-CO')}</div>
+              <div class="card-meta">${new Date(c.createdAt).toLocaleDateString('es-CO')}</div>
+              ${tags.length ? `<div class="card-tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
             </div>
             <div class="card-actions">
               <button class="btn-copy" onclick="navigator.clipboard.writeText('${c.shareLink}');this.textContent='¡Copiado!';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button>
-              <button class="btn-danger" onclick="deleteCard('${c.id}', this)">Borrar</button>
+              <button class="btn-danger" onclick="deleteCard('${c.id}',this)">Borrar</button>
             </div>
           `;
           list.appendChild(item);
         });
-      } catch (e) {
+      } catch(e) {
         document.getElementById('loadingCards').textContent = 'Error al cargar.';
       }
     }
@@ -433,12 +550,8 @@
     async function deleteCard(id, btn) {
       if (!confirm(`¿Borrar la tarjeta ${id}?`)) return;
       btn.disabled = true;
-      const res = await fetch(`/api/cards/${id}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-pass': adminPass }
-      });
-      if (res.ok) loadCards();
-      else btn.disabled = false;
+      const res = await fetch(`/api/cards/${id}`, { method: 'DELETE', headers: { 'x-admin-pass': adminPass } });
+      if (res.ok) loadCards(); else btn.disabled = false;
     }
   </script>
 </body>

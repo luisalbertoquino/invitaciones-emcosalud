@@ -53,6 +53,8 @@
         #050e1c 0%, #0c1e3a 20%, #183560 40%,
         #102848 60%, #0a1a30 80%, #050e1c 100%
       );
+      background-size: cover;
+      background-position: center;
       position: relative;
       width: 400px;
       height: 100vh;
@@ -91,6 +93,8 @@
         #3b6bb5 46%, #4d7fcc 50%, #3b6bb5 54%, #2a5496 62%,
         #1a3868 75%, #0e2040 88%, #060f1e 100%
       );
+      background-size: cover;
+      background-position: center;
       z-index: 2;
       overflow: hidden;
     }
@@ -106,6 +110,8 @@
         #3b6bb5 46%, #4d7fcc 50%, #3b6bb5 54%, #2a5496 62%,
         #1a3868 75%, #0e2040 88%, #060f1e 100%
       );
+      background-size: cover;
+      background-position: center;
       z-index: 2;
       overflow: hidden;
     }
@@ -211,7 +217,7 @@
   <div class="container">
     <div class="backDoor" id="backDoor" onclick="toggleTarjeta()">
 
-      <div class="door" id="door"></div>
+      <div class="door"  id="door"></div>
       <div class="door2" id="door2"></div>
 
       <div class="sello-wrapper" id="sello-wrapper">
@@ -230,32 +236,71 @@
   <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.9.1/tsparticles.confetti.bundle.min.js"></script>
 
   <script>
-    // ── Detectar ?card=ID en la URL ────────────────────────────────────────
     const params = new URLSearchParams(window.location.search);
     const cardId = params.get('card');
 
-    const IMG = {
-      sello: '/images/sello.png',
-      carta: cardId
-        ? `/images/cards/carta-${cardId}.webp`
-        : '/images/carta-interior.png'
-    };
-
     let abierto = false;
 
-    function init() {
+    async function init() {
+      const bd    = document.getElementById('backDoor');
+      const door  = document.getElementById('door');
+      const door2 = document.getElementById('door2');
       const sello = document.getElementById('img-sello');
       const carta = document.getElementById('img-carta');
       const sw    = document.getElementById('sello-wrapper');
 
-      sello.src = IMG.sello;
+      let cfg = null;
+
+      if (cardId) {
+        try {
+          const r = await fetch(`/api/card/${cardId}`);
+          if (r.ok) cfg = await r.json();
+        } catch (_) {}
+      }
+
+      // ── Fondo del sobre ──────────────────────────────────────────────────
+      if (cfg?.fondo) {
+        if (cfg.fondo.type === 'image') {
+          bd.style.backgroundImage    = `url('${cfg.fondo.value}')`;
+          bd.style.backgroundSize     = 'cover';
+          bd.style.backgroundPosition = 'center';
+        } else {
+          bd.style.background = cfg.fondo.value;
+        }
+      }
+
+      // ── Solapa izquierda ─────────────────────────────────────────────────
+      if (cfg?.solapa1) {
+        if (cfg.solapa1.type === 'image') {
+          door.style.backgroundImage    = `url('${cfg.solapa1.value}')`;
+          door.style.backgroundSize     = 'cover';
+          door.style.backgroundPosition = 'center';
+        } else {
+          door.style.background = cfg.solapa1.value;
+        }
+      }
+
+      // ── Solapa derecha ───────────────────────────────────────────────────
+      if (cfg?.solapa2) {
+        if (cfg.solapa2.type === 'image') {
+          door2.style.backgroundImage    = `url('${cfg.solapa2.value}')`;
+          door2.style.backgroundSize     = 'cover';
+          door2.style.backgroundPosition = 'center';
+        } else {
+          door2.style.background = cfg.solapa2.value;
+        }
+      }
+
+      // ── Sello ────────────────────────────────────────────────────────────
+      sello.src = cfg?.sello || '/images/sello.png';
       sw.style.display = 'flex';
 
-      // Pre-carga la imagen de la carta antes de mostrarse
-      const preload = new Image();
-      preload.onload  = () => { carta.src = IMG.carta; };
+      // ── Carta interior ───────────────────────────────────────────────────
+      const cartaSrc = cfg?.carta || '/images/carta-interior.png';
+      const preload  = new Image();
+      preload.onload  = () => { carta.src = cartaSrc; };
       preload.onerror = () => { carta.src = '/images/carta-interior.png'; };
-      preload.src = IMG.carta;
+      preload.src = cartaSrc;
     }
 
     function toggleTarjeta() {
@@ -275,7 +320,6 @@
         document.getElementById('contenido-carta').classList.add('active');
         lanzarConfeti();
       }, 280);
-
     }
 
     function cerrarTarjeta() {
@@ -301,10 +345,8 @@
       const interval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) return clearInterval(interval);
-
         const particleCount = 50 * (timeLeft / duration);
         const rng = (min, max) => Math.random() * (max - min) + min;
-
         confetti({ ...defaults, particleCount, origin: { x: rng(0.1, 0.3), y: Math.random() - 0.2 } });
         confetti({ ...defaults, particleCount, origin: { x: rng(0.7, 0.9), y: Math.random() - 0.2 } });
       }, 250);
