@@ -13,7 +13,7 @@ const ADMIN_PASS = process.env.ADMIN_PASS || 'emco2025';
 const CARDS_DIR = path.join(__dirname, 'public/images/cards');
 fs.mkdirSync(CARDS_DIR, { recursive: true });
 
-// ── Multer: múltiples campos opcionales ─────────────────────────────────────
+// ── Multer: acepta cualquier campo imagen ────────────────────────────────────
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 30 * 1024 * 1024 },
@@ -21,13 +21,10 @@ const upload = multer({
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Solo imágenes'));
   }
-}).fields([
-  { name: 'carta',    maxCount: 1 },
-  { name: 'sello',    maxCount: 1 },
-  { name: 'fondo',    maxCount: 1 },
-  { name: 'solapa1',  maxCount: 1 },
-  { name: 'solapa2',  maxCount: 1 },
-]);
+}).any();
+
+// Helper para encontrar un archivo por nombre de campo
+const getFile = (files, name) => files?.find(f => f.fieldname === name);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -54,37 +51,42 @@ app.post('/api/upload', auth, (req, res) => {
     if (err) return res.status(400).json({ success: false, error: err.message });
 
     try {
-      if (!req.files?.carta?.[0])
+      const cartaFile = getFile(req.files, 'carta');
+      if (!cartaFile)
         return res.status(400).json({ success: false, error: 'La imagen de tarjeta es obligatoria' });
 
       const id = uuidv4().replace(/-/g, '').slice(0, 8);
       const config = { id, shareLink: `${BASE_URL}/?card=${id}` };
 
       // Carta interior (obligatoria)
-      config.carta = await saveImg(req.files.carta[0].buffer, `carta-${id}.webp`, 1400);
+      config.carta = await saveImg(cartaFile.buffer, `carta-${id}.webp`, 1400);
 
       // Sello personalizado (opcional)
-      if (req.files?.sello?.[0]) {
-        config.sello = await saveImg(req.files.sello[0].buffer, `sello-${id}.webp`, 600);
+      const selloFile = getFile(req.files, 'sello');
+      if (selloFile) {
+        config.sello = await saveImg(selloFile.buffer, `sello-${id}.webp`, 600);
       }
 
       // Fondo: imagen o color
-      if (req.files?.fondo?.[0]) {
-        config.fondo = { type: 'image', value: await saveImg(req.files.fondo[0].buffer, `fondo-${id}.webp`, 1600) };
+      const fondoFile = getFile(req.files, 'fondo');
+      if (fondoFile) {
+        config.fondo = { type: 'image', value: await saveImg(fondoFile.buffer, `fondo-${id}.webp`, 1600) };
       } else if (req.body?.fondo_color) {
         config.fondo = { type: 'color', value: req.body.fondo_color };
       }
 
       // Solapa izquierda: imagen o color
-      if (req.files?.solapa1?.[0]) {
-        config.solapa1 = { type: 'image', value: await saveImg(req.files.solapa1[0].buffer, `solapa1-${id}.webp`, 800) };
+      const solapa1File = getFile(req.files, 'solapa1');
+      if (solapa1File) {
+        config.solapa1 = { type: 'image', value: await saveImg(solapa1File.buffer, `solapa1-${id}.webp`, 800) };
       } else if (req.body?.solapa1_color) {
         config.solapa1 = { type: 'color', value: req.body.solapa1_color };
       }
 
       // Solapa derecha: imagen o color
-      if (req.files?.solapa2?.[0]) {
-        config.solapa2 = { type: 'image', value: await saveImg(req.files.solapa2[0].buffer, `solapa2-${id}.webp`, 800) };
+      const solapa2File = getFile(req.files, 'solapa2');
+      if (solapa2File) {
+        config.solapa2 = { type: 'image', value: await saveImg(solapa2File.buffer, `solapa2-${id}.webp`, 800) };
       } else if (req.body?.solapa2_color) {
         config.solapa2 = { type: 'color', value: req.body.solapa2_color };
       }
