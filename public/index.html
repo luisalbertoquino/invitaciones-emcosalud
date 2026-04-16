@@ -240,6 +240,7 @@
     const cardId = params.get('card');
 
     let abierto = false;
+    let confettiInterval = null;
 
     async function init() {
       const bd    = document.getElementById('backDoor');
@@ -318,12 +319,14 @@
 
       setTimeout(() => {
         document.getElementById('contenido-carta').classList.add('active');
-        lanzarConfeti();
       }, 280);
+
+      lanzarConfeti();
     }
 
     function cerrarTarjeta() {
       abierto = false;
+      detenerConfeti();
       document.getElementById('door').classList.remove('doorOpen');
       document.getElementById('door2').classList.remove('doorOpen2');
       document.getElementById('contenido-carta').classList.remove('active');
@@ -333,18 +336,26 @@
       }, 300);
     }
 
+    function detenerConfeti() {
+      if (confettiInterval) {
+        clearInterval(confettiInterval);
+        confettiInterval = null;
+      }
+    }
+
     function lanzarConfeti() {
+      detenerConfeti();
       const colores = [
         '#00ff88','#00e676','#69ff47','#18ffaa','#00ff41','#76ff03','#1de9b6','#00ffcc',
         '#0984e3','#74b9ff','#ffffff','#f0fff4'
       ];
-      const duration     = 12 * 1000;
+      const duration     = 4 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults     = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999, colors: colores };
 
-      const interval = setInterval(() => {
+      confettiInterval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
+        if (timeLeft <= 0) return detenerConfeti();
         const particleCount = 50 * (timeLeft / duration);
         const rng = (min, max) => Math.random() * (max - min) + min;
         confetti({ ...defaults, particleCount, origin: { x: rng(0.1, 0.3), y: Math.random() - 0.2 } });
