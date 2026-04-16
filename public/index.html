@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjeta Interactiva</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #050e1c;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(30, 70, 140, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 70%, rgba(10, 40, 90, 0.4) 0%, transparent 55%),
+        radial-gradient(ellipse 100% 50% at 50% 100%, rgba(5, 20, 50, 0.6) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .backDoor {
+      background: linear-gradient(160deg,
+        #050e1c 0%, #0c1e3a 20%, #183560 40%,
+        #102848 60%, #0a1a30 80%, #050e1c 100%
+      );
+      position: relative;
+      width: 400px;
+      height: 100vh;
+      transition: width 0.65s cubic-bezier(.4,0,.2,1);
+      z-index: 1;
+      cursor: pointer;
+      overflow: visible;
+    }
+    .backDoor.abierto { width: calc(100vw - 80px); }
+
+    .backDoor::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(
+        100deg,
+        transparent 20%,
+        rgba(100, 160, 240, 0.04) 48%,
+        rgba(140, 190, 255, 0.10) 50%,
+        rgba(100, 160, 240, 0.04) 52%,
+        transparent 80%
+      );
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    .door {
+      position: absolute;
+      top: 0; left: 0;
+      width: 50%; height: 100%;
+      transform-origin: left;
+      transition: transform 0.55s ease-in-out;
+      background: linear-gradient(135deg,
+        #060f1e 0%, #0e2040 12%, #1a3868 25%, #2a5496 38%,
+        #3b6bb5 46%, #4d7fcc 50%, #3b6bb5 54%, #2a5496 62%,
+        #1a3868 75%, #0e2040 88%, #060f1e 100%
+      );
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .door2 {
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%; height: 100%;
+      transform-origin: right;
+      transition: transform 0.55s ease-in-out;
+      background: linear-gradient(225deg,
+        #060f1e 0%, #0e2040 12%, #1a3868 25%, #2a5496 38%,
+        #3b6bb5 46%, #4d7fcc 50%, #3b6bb5 54%, #2a5496 62%,
+        #1a3868 75%, #0e2040 88%, #060f1e 100%
+      );
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .door img.solapa-img,
+    .door2 img.solapa-img {
+      height: 100%; width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .seam {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60px; height: 100%;
+      background: linear-gradient(to right,
+        transparent 0%,
+        rgba(180, 210, 255, 0.02) 20%,
+        rgba(200, 225, 255, 0.18) 47%,
+        rgba(220, 240, 255, 0.32) 50%,
+        rgba(200, 225, 255, 0.18) 53%,
+        rgba(180, 210, 255, 0.02) 80%,
+        transparent 100%
+      );
+      z-index: 6;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .backDoor.abierto .seam { opacity: 0; }
+
+    .sello-wrapper {
+      width: clamp(180px, 52%, 280px);
+      height: auto;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 8;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow:
+        0 0 0 3px rgba(140, 190, 255, 0.25),
+        0 0 0 7px rgba(80, 140, 220, 0.12),
+        0 8px 40px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      animation: blueShimmer 3s infinite;
+    }
+    .backDoor.abierto .sello-wrapper {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+    .sello-btn {
+      width: 100%; height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .doorOpen  { transform: perspective(1800px) rotateY(-118deg); }
+    .doorOpen2 { transform: perspective(1800px) rotateY(118deg); }
+
+    .contenido-carta {
+      position: absolute;
+      width: 88%; height: 88%;
+      left: 0; right: 0; top: 0; bottom: 0;
+      margin: auto;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .contenido-carta img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .contenido-carta.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #hint-click {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(160, 200, 255, 0.4);
+      font-family: sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.8px;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.6s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #hint-click.hidden { opacity: 0; }
+    #hint-click::before,
+    #hint-click::after {
+      content: '';
+      width: 28px; height: 1px;
+      background: rgba(100, 160, 255, 0.25);
+    }
+
+    @keyframes blueShimmer {
+      0%   { filter: brightness(0.92) drop-shadow(0 0 6px rgba(80,140,255,0.2)); }
+      50%  { filter: brightness(1.08) drop-shadow(0 0 14px rgba(100,170,255,0.45)); }
+      100% { filter: brightness(0.92) drop-shadow(0 0 6px rgba(80,140,255,0.2)); }
+    }
+
+    @media (max-width: 420px) {
+      .backDoor { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="backDoor" id="backDoor" onclick="toggleTarjeta()">
+
+      <div class="door" id="door">
+        <img class="solapa-img" id="img-solapa1" src="" alt="">
+      </div>
+
+      <div class="door2" id="door2">
+        <img class="solapa-img" id="img-solapa2" src="" alt="">
+      </div>
+
+      <div class="sello-wrapper" id="sello-wrapper">
+        <img class="sello-btn" id="img-sello" src="" alt="">
+      </div>
+
+      <div class="seam"></div>
+
+      <div class="contenido-carta" id="contenido-carta">
+        <img id="img-carta" src="" alt="">
+      </div>
+
+    </div>
+  </div>
+
+  <div id="hint-click">Toca en cualquier parte para abrir</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.9.1/tsparticles.confetti.bundle.min.js"></script>
+
+  <script>
+    // ── Detectar ?card=ID en la URL ────────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const cardId = params.get('card');
+
+    const IMG = {
+      sello: '/images/sello.png',
+      carta: cardId
+        ? `/images/cards/carta-${cardId}.webp`
+        : '/images/carta-interior.png'
+    };
+
+    let abierto = false;
+
+    function init() {
+      const sello = document.getElementById('img-sello');
+      const carta = document.getElementById('img-carta');
+      const sw    = document.getElementById('sello-wrapper');
+
+      sello.src = IMG.sello;
+      sw.style.display = 'flex';
+
+      // Pre-carga la imagen de la carta antes de mostrarse
+      const preload = new Image();
+      preload.onload  = () => { carta.src = IMG.carta; };
+      preload.onerror = () => { carta.src = '/images/carta-interior.png'; };
+      preload.src = IMG.carta;
+    }
+
+    function toggleTarjeta() {
+      abierto ? cerrarTarjeta() : abrirTarjeta();
+    }
+
+    function abrirTarjeta() {
+      abierto = true;
+      document.getElementById('backDoor').classList.add('abierto');
+
+      setTimeout(() => {
+        document.getElementById('door').classList.add('doorOpen');
+        document.getElementById('door2').classList.add('doorOpen2');
+      }, 50);
+
+      setTimeout(() => {
+        document.getElementById('contenido-carta').classList.add('active');
+        lanzarConfeti();
+      }, 280);
+
+      document.getElementById('hint-click').classList.add('hidden');
+    }
+
+    function cerrarTarjeta() {
+      abierto = false;
+      document.getElementById('door').classList.remove('doorOpen');
+      document.getElementById('door2').classList.remove('doorOpen2');
+      document.getElementById('contenido-carta').classList.remove('active');
+
+      setTimeout(() => {
+        document.getElementById('backDoor').classList.remove('abierto');
+      }, 300);
+
+      document.getElementById('hint-click').classList.remove('hidden');
+    }
+
+    function lanzarConfeti() {
+      const colores = [
+        '#00ff88','#00e676','#69ff47','#18ffaa','#00ff41','#76ff03','#1de9b6','#00ffcc',
+        '#0984e3','#74b9ff','#ffffff','#f0fff4'
+      ];
+      const duration     = 12 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults     = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999, colors: colores };
+
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+
+        const particleCount = 50 * (timeLeft / duration);
+        const rng = (min, max) => Math.random() * (max - min) + min;
+
+        confetti({ ...defaults, particleCount, origin: { x: rng(0.1, 0.3), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: rng(0.7, 0.9), y: Math.random() - 0.2 } });
+      }, 250);
+    }
+
+    init();
+  </script>
+</body>
+</html>

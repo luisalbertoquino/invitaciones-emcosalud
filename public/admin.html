@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Tarjetas EMCOSALUD</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0a0f1e;
+      color: #c8d8f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #7ab4ff;
+      letter-spacing: 1px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #1e3050;
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .card h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #4a7fbf;
+      margin-bottom: 18px;
+    }
+
+    /* ── Login ─────────────────────────────────────────── */
+    #loginSection { max-width: 360px; margin: 80px auto; }
+    #loginSection input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0d1526;
+      border: 1px solid #1e3050;
+      border-radius: 8px;
+      color: #c8d8f0;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    #loginSection input:focus { border-color: #3a6bb5; }
+    #loginError {
+      color: #ff6b6b;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    /* ── Drop zone ─────────────────────────────────────── */
+    .drop-zone {
+      border: 2px dashed #1e3a6a;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: #4a8fd4;
+      background: rgba(74, 143, 212, 0.05);
+    }
+    .drop-zone p { font-size: 0.9rem; color: #5580aa; margin-bottom: 12px; }
+    .drop-zone span { font-size: 0.75rem; color: #344a6a; }
+
+    /* ── Preview ───────────────────────────────────────── */
+    #previewWrap {
+      display: none;
+      margin-top: 18px;
+      text-align: center;
+    }
+    #previewImg {
+      max-width: 100%;
+      max-height: 260px;
+      border-radius: 8px;
+      border: 1px solid #1e3050;
+      object-fit: contain;
+    }
+    #fileInfo {
+      font-size: 0.75rem;
+      color: #4a6a8a;
+      margin-top: 6px;
+    }
+
+    /* ── Buttons ───────────────────────────────────────── */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.35; cursor: default; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1a4a9a, #2a6bd4);
+      color: #fff;
+      margin-top: 16px;
+    }
+    .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+
+    .btn-secondary {
+      background: #111827;
+      color: #5580aa;
+      border: 1px solid #1e3050;
+      font-size: 0.85rem;
+      padding: 10px;
+    }
+    .btn-danger {
+      background: #2a0f0f;
+      color: #ff6b6b;
+      border: 1px solid #5a1a1a;
+      font-size: 0.82rem;
+      padding: 8px;
+      width: auto;
+      border-radius: 6px;
+    }
+
+    /* ── Result ────────────────────────────────────────── */
+    #resultBox {
+      display: none;
+      margin-top: 18px;
+      background: #0d1a2e;
+      border: 1px solid #1e3a6a;
+      border-radius: 10px;
+      padding: 18px;
+    }
+    #resultBox p { font-size: 0.8rem; color: #4a7fbf; margin-bottom: 8px; }
+    .link-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    #linkOutput {
+      flex: 1;
+      padding: 10px 12px;
+      background: #060d1a;
+      border: 1px solid #1e3050;
+      border-radius: 6px;
+      color: #7ab4ff;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .btn-copy {
+      padding: 10px 14px;
+      background: #1a3a6a;
+      color: #7ab4ff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: auto;
+      white-space: nowrap;
+    }
+    .btn-copy:hover { background: #1e4a8a; }
+
+    /* ── Cards list ────────────────────────────────────── */
+    .cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #0d1526;
+      border: 1px solid #1a2e4a;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .card-item img {
+      width: 56px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .card-item-info { flex: 1; min-width: 0; }
+    .card-item-info .card-id {
+      font-size: 0.78rem;
+      color: #7ab4ff;
+      font-family: monospace;
+    }
+    .card-item-info .card-meta {
+      font-size: 0.72rem;
+      color: #3a5a7a;
+      margin-top: 2px;
+    }
+    .card-actions { display: flex; gap: 6px; align-items: center; }
+
+    #loadingCards { font-size: 0.82rem; color: #3a5a7a; }
+    #noCards { font-size: 0.82rem; color: #3a5a7a; display: none; }
+
+    /* ── Upload progress ───────────────────────────────── */
+    #uploadStatus {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      text-align: center;
+      min-height: 18px;
+      color: #4a7fbf;
+    }
+    #uploadStatus.error { color: #ff6b6b; }
+    #uploadStatus.ok { color: #00d97e; }
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN ───────────────────────────────────────────── -->
+  <div id="loginSection" class="card">
+    <h1>Admin — EMCOSALUD</h1>
+    <p id="loginError">Contraseña incorrecta</p>
+    <input type="password" id="passInput" placeholder="Contraseña" autocomplete="current-password">
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+  </div>
+
+  <!-- ── PANEL PRINCIPAL ─────────────────────────────────── -->
+  <div id="mainPanel" style="display:none">
+    <h1>Tarjetas EMCOSALUD</h1>
+
+    <!-- Subir nueva tarjeta -->
+    <div class="card">
+      <h2>Subir nueva tarjeta</h2>
+
+      <div class="drop-zone" id="dropZone"
+           ondragover="onDragOver(event)"
+           ondragleave="onDragLeave(event)"
+           ondrop="onDrop(event)"
+           onclick="document.getElementById('fileInput').click()">
+        <p>Arrastra la imagen aquí</p>
+        <span>PNG, JPG, WEBP — máx. 30 MB</span>
+        <input type="file" id="fileInput" accept="image/*" hidden onchange="onFileChange(event)">
+      </div>
+
+      <div id="previewWrap">
+        <img id="previewImg" src="" alt="Preview">
+        <p id="fileInfo"></p>
+      </div>
+
+      <p id="uploadStatus"></p>
+      <button class="btn-primary" id="uploadBtn" onclick="uploadCard()" disabled>Generar enlace</button>
+
+      <div id="resultBox">
+        <p>Enlace listo para compartir:</p>
+        <div class="link-row">
+          <input type="text" id="linkOutput" readonly>
+          <button class="btn-copy" onclick="copyLink()">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjetas existentes -->
+    <div class="card">
+      <h2>Tarjetas creadas</h2>
+      <div class="cards-grid" id="cardsList">
+        <p id="loadingCards">Cargando...</p>
+        <p id="noCards">No hay tarjetas aún.</p>
+      </div>
+      <button class="btn-secondary" style="margin-top:16px" onclick="loadCards()">Actualizar lista</button>
+    </div>
+  </div>
+
+  <script>
+    let adminPass = '';
+    let selectedFile = null;
+
+    // ── Login ──────────────────────────────────────────────
+    function doLogin() {
+      const val = document.getElementById('passInput').value.trim();
+      if (!val) return;
+      adminPass = val;
+      // Verificar con una llamada real
+      fetch('/api/cards', { headers: { 'x-admin-pass': adminPass } })
+        .then(r => {
+          if (r.ok) {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('mainPanel').style.display = 'block';
+            loadCards();
+          } else {
+            document.getElementById('loginError').style.display = 'block';
+            adminPass = '';
+          }
+        })
+        .catch(() => {
+          document.getElementById('loginError').style.display = 'block';
+        });
+    }
+    document.getElementById('passInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // ── Drag & Drop ────────────────────────────────────────
+    function onDragOver(e) {
+      e.preventDefault();
+      document.getElementById('dropZone').classList.add('drag-over');
+    }
+    function onDragLeave(e) {
+      document.getElementById('dropZone').classList.remove('drag-over');
+    }
+    function onDrop(e) {
+      e.preventDefault();
+      document.getElementById('dropZone').classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) setFile(file);
+    }
+    function onFileChange(e) {
+      const file = e.target.files[0];
+      if (file) setFile(file);
+    }
+
+    function setFile(file) {
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById('previewImg').src = ev.target.result;
+        document.getElementById('previewWrap').style.display = 'block';
+        document.getElementById('fileInfo').textContent =
+          `${file.name} — ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+      };
+      reader.readAsDataURL(file);
+      document.getElementById('uploadBtn').disabled = false;
+      document.getElementById('uploadStatus').textContent = '';
+      document.getElementById('resultBox').style.display = 'none';
+    }
+
+    // ── Upload ─────────────────────────────────────────────
+    async function uploadCard() {
+      if (!selectedFile) return;
+      const btn = document.getElementById('uploadBtn');
+      const status = document.getElementById('uploadStatus');
+      btn.disabled = true;
+      status.className = '';
+      status.textContent = 'Subiendo y optimizando...';
+
+      const form = new FormData();
+      form.append('card', selectedFile);
+
+      try {
+        const res  = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'x-admin-pass': adminPass },
+          body: form
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          status.className = 'ok';
+          status.textContent = '¡Listo!';
+          document.getElementById('linkOutput').value = data.shareLink;
+          document.getElementById('resultBox').style.display = 'block';
+          loadCards();
+        } else {
+          throw new Error(data.error || 'Error desconocido');
+        }
+      } catch (err) {
+        status.className = 'error';
+        status.textContent = 'Error: ' + err.message;
+        btn.disabled = false;
+      }
+    }
+
+    function copyLink() {
+      const input = document.getElementById('linkOutput');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.textContent = '¡Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar', 2000);
+      });
+    }
+
+    // ── Lista de tarjetas ──────────────────────────────────
+    async function loadCards() {
+      const list = document.getElementById('cardsList');
+      document.getElementById('loadingCards').style.display = 'block';
+      document.getElementById('noCards').style.display = 'none';
+      // Limpiar items anteriores
+      Array.from(list.querySelectorAll('.card-item')).forEach(el => el.remove());
+
+      try {
+        const res   = await fetch('/api/cards', { headers: { 'x-admin-pass': adminPass } });
+        const cards = await res.json();
+        document.getElementById('loadingCards').style.display = 'none';
+
+        if (!cards.length) {
+          document.getElementById('noCards').style.display = 'block';
+          return;
+        }
+
+        cards.forEach(c => {
+          const item = document.createElement('div');
+          item.className = 'card-item';
+          item.innerHTML = `
+            <img src="/images/cards/${c.filename}" alt="">
+            <div class="card-item-info">
+              <div class="card-id">${c.id}</div>
+              <div class="card-meta">${c.sizeKB} KB · ${new Date(c.createdAt).toLocaleDateString('es-CO')}</div>
+            </div>
+            <div class="card-actions">
+              <button class="btn-copy" onclick="navigator.clipboard.writeText('${c.shareLink}');this.textContent='¡Copiado!';setTimeout(()=>this.textContent='Copiar',2000)">Copiar</button>
+              <button class="btn-danger" onclick="deleteCard('${c.id}', this)">Borrar</button>
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      } catch (e) {
+        document.getElementById('loadingCards').textContent = 'Error al cargar.';
+      }
+    }
+
+    async function deleteCard(id, btn) {
+      if (!confirm(`¿Borrar la tarjeta ${id}?`)) return;
+      btn.disabled = true;
+      const res = await fetch(`/api/cards/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-pass': adminPass }
+      });
+      if (res.ok) loadCards();
+      else btn.disabled = false;
+    }
+  </script>
+</body>
+</html>
