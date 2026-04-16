@@ -351,15 +351,32 @@
       ];
       const duration     = 4 * 1000;
       const animationEnd = Date.now() + duration;
-      const defaults     = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999, colors: colores };
 
       confettiInterval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) return detenerConfeti();
-        const particleCount = 50 * (timeLeft / duration);
-        const rng = (min, max) => Math.random() * (max - min) + min;
-        confetti({ ...defaults, particleCount, origin: { x: rng(0.1, 0.3), y: Math.random() - 0.2 } });
-        confetti({ ...defaults, particleCount, origin: { x: rng(0.7, 0.9), y: Math.random() - 0.2 } });
+
+        // Calcular límites de la tarjeta en coordenadas 0-1 del viewport
+        const rect = document.getElementById('contenido-carta').getBoundingClientRect();
+        const xMin = rect.left   / window.innerWidth;
+        const xMax = rect.right  / window.innerWidth;
+        const yMin = rect.top    / window.innerHeight;
+        const yMax = rect.bottom / window.innerHeight;
+        const rng  = (a, b) => Math.random() * (b - a) + a;
+
+        const particleCount = 25 * (timeLeft / duration);
+        const defaults = {
+          colors: colores,
+          startVelocity: 14,
+          spread: 360,
+          ticks: 70,
+          gravity: 1.4,
+          scalar: 0.85,
+          zIndex: 9999
+        };
+
+        confetti({ ...defaults, particleCount, origin: { x: rng(xMin, xMax), y: rng(yMin, yMax) } });
+        confetti({ ...defaults, particleCount, origin: { x: rng(xMin, xMax), y: rng(yMin, yMax) } });
       }, 250);
     }
 
