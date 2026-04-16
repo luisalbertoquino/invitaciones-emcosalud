@@ -110,13 +110,6 @@
       overflow: hidden;
     }
 
-    .door img.solapa-img,
-    .door2 img.solapa-img {
-      height: 100%; width: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
     .seam {
       position: absolute;
       top: 0; left: 50%;
@@ -156,12 +149,12 @@
       justify-content: center;
       padding: 10px;
       pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      animation: blueShimmer 3s infinite;
+      transition: opacity 0.3s ease;
+      animation: quiereExplotar 2.4s ease-in-out infinite;
     }
     .backDoor.abierto .sello-wrapper {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.7);
+      pointer-events: none;
     }
     .sello-btn {
       width: 100%; height: auto;
@@ -196,33 +189,16 @@
       pointer-events: auto;
     }
 
-    #hint-click {
-      position: fixed;
-      bottom: 28px; left: 50%;
-      transform: translateX(-50%);
-      color: rgba(160, 200, 255, 0.4);
-      font-family: sans-serif;
-      font-size: 12px;
-      letter-spacing: 0.8px;
-      pointer-events: none;
-      z-index: 100;
-      transition: opacity 0.6s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    #hint-click.hidden { opacity: 0; }
-    #hint-click::before,
-    #hint-click::after {
-      content: '';
-      width: 28px; height: 1px;
-      background: rgba(100, 160, 255, 0.25);
-    }
-
-    @keyframes blueShimmer {
-      0%   { filter: brightness(0.92) drop-shadow(0 0 6px rgba(80,140,255,0.2)); }
-      50%  { filter: brightness(1.08) drop-shadow(0 0 14px rgba(100,170,255,0.45)); }
-      100% { filter: brightness(0.92) drop-shadow(0 0 6px rgba(80,140,255,0.2)); }
+    @keyframes quiereExplotar {
+      0%   { transform: translate(-50%, -50%) scale(1)    rotate(0deg);    filter: drop-shadow(0 0 8px  rgba(80,140,255,0.3)); }
+      12%  { transform: translate(-50%, -50%) scale(1.07) rotate(-1.8deg); filter: drop-shadow(0 0 20px rgba(100,170,255,0.65)); }
+      24%  { transform: translate(-50%, -50%) scale(0.96) rotate(1.2deg);  filter: drop-shadow(0 0 6px  rgba(80,140,255,0.2)); }
+      38%  { transform: translate(-50%, -50%) scale(1.12) rotate(-1deg);   filter: drop-shadow(0 0 28px rgba(130,200,255,0.9)); }
+      50%  { transform: translate(-50%, -50%) scale(0.97) rotate(0.6deg);  filter: drop-shadow(0 0 8px  rgba(80,140,255,0.3)); }
+      63%  { transform: translate(-50%, -50%) scale(1.08) rotate(-0.9deg); filter: drop-shadow(0 0 22px rgba(100,170,255,0.7)); }
+      76%  { transform: translate(-50%, -50%) scale(1.01) rotate(0.4deg);  filter: drop-shadow(0 0 10px rgba(80,140,255,0.35)); }
+      88%  { transform: translate(-50%, -50%) scale(1.05) rotate(-0.5deg); filter: drop-shadow(0 0 16px rgba(100,170,255,0.5)); }
+      100% { transform: translate(-50%, -50%) scale(1)    rotate(0deg);    filter: drop-shadow(0 0 8px  rgba(80,140,255,0.3)); }
     }
 
     @media (max-width: 420px) {
@@ -235,13 +211,8 @@
   <div class="container">
     <div class="backDoor" id="backDoor" onclick="toggleTarjeta()">
 
-      <div class="door" id="door">
-        <img class="solapa-img" id="img-solapa1" src="" alt="">
-      </div>
-
-      <div class="door2" id="door2">
-        <img class="solapa-img" id="img-solapa2" src="" alt="">
-      </div>
+      <div class="door" id="door"></div>
+      <div class="door2" id="door2"></div>
 
       <div class="sello-wrapper" id="sello-wrapper">
         <img class="sello-btn" id="img-sello" src="" alt="">
@@ -255,8 +226,6 @@
 
     </div>
   </div>
-
-  <div id="hint-click">Toca en cualquier parte para abrir</div>
 
   <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.9.1/tsparticles.confetti.bundle.min.js"></script>
 
@@ -307,7 +276,6 @@
         lanzarConfeti();
       }, 280);
 
-      document.getElementById('hint-click').classList.add('hidden');
     }
 
     function cerrarTarjeta() {
@@ -319,8 +287,6 @@
       setTimeout(() => {
         document.getElementById('backDoor').classList.remove('abierto');
       }, 300);
-
-      document.getElementById('hint-click').classList.remove('hidden');
     }
 
     function lanzarConfeti() {
